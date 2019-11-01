@@ -1,0 +1,43 @@
+﻿@model Books.Domain.Concrete.Node
+
+@{
+    ViewBag.Title = "Admin: Edit " + @Model.Heading;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="panel">
+    <div class="panel-heading">
+        <h3>Edit @Model.Heading</h3>
+    </div>
+
+    @using (Html.BeginForm("Edit", "Admin", new { NodeID = @Model.NodeID, ParentNodeID = @Model.ParentNodeID, TreeLevel = @Model.TreeLevel }, FormMethod.Post, new { @class = "navbutton" }))
+    {
+        <div class="panel-body">
+            @foreach (var property in ViewData.ModelMetadata.Properties)
+            {
+                if (property.PropertyName == "Heading" || property.PropertyName == "NodeText")
+                {
+                    <div class="form-group">
+                        <label>@(property.DisplayName ?? property.PropertyName)</label>
+                        @if (property.PropertyName == "NodeText")
+                        {
+                            @Html.TextArea(property.PropertyName, null,
+                                new { @class = "form-control", rows = 20 })
+                        }
+                        else
+                        {
+                            @Html.TextBox(property.PropertyName, null,
+                                new { @class = "form-control" })
+                        }
+                        @Html.ValidationMessage(property.PropertyName)
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="panel-footer">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            @Html.ActionLink("Cancel and return to Book", "Index", "Book", new { NodeID = @Model.NodeID }, new { @class = "btn btn-default" })
+        </div>
+    }
+</div>

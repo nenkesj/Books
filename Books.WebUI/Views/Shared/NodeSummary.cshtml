@@ -1,0 +1,13 @@
+﻿@model Books.Domain.Concrete.Node
+
+<div class="well">
+    <h3>@Model.Heading</h3>
+    @using (Html.BeginForm("Index", "Book"))
+    {
+        <div>
+            @Html.HiddenFor(x => x.NodeID)
+            <input class="pull-right btn btn-primary" type="submit" value="View" />
+        </div>
+    }
+    <span class="lead">@Model.NodeText</span>
+</div>

@@ -1,0 +1,25 @@
+﻿@using Books.Domain.Concrete
+@model IEnumerable<Node>
+
+@{
+    Layout = null;
+}
+
+@Html.ActionLink("Home", "List", "Node", new {}, new { @class = "btn btn-block btn-default btn-sm" })
+<br />
+@foreach (var n in Model)
+{
+    if (n.TreeLevel != 1)
+    {
+        @Html.RouteLink(n.Heading,
+        new
+        {
+            controller = "Book",
+            action = "Index",
+            NodeID = n.NodeID,
+            searchkey = Session["SearchKey"]
+        },
+        new {@class = "btn btn-block btn-default btn-sm"
+            + (n.Heading == ViewBag.SelectedNodeHeading ? " btn-primary" : "")})
+    }
+}

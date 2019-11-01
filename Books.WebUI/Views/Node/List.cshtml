@@ -1,0 +1,21 @@
+﻿@using Books.Domain.Concrete
+@using Books.WebUI.HtmlHelpers
+@model Books.WebUI.Models.NodesListViewModel
+
+@{
+    ViewBag.Title = "Your Books";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "Nodes";
+}
+
+@foreach (var p in Model.Nodes)
+{
+    @Html.Partial("NodeSummary", p)
+}
+<div class="btn-group">
+    @Html.PageLinks(Model.PagingInfo, x => Url.Action("List", new { page = x }))
+</div>
+

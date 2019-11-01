@@ -1,0 +1,10 @@
+Books.Domain
+Books.UnitTests
+Books.WebUI/Properties
+Books.WebUI/References
+Books.WebUI/bin
+Books.WebUI/images
+Books.WebUI/obj
+packages
+Books.sln
+Books.v12.suo

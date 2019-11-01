@@ -1,0 +1,41 @@
+﻿@model Books.WebUI.Models.BookIndexViewModel
+@using System.Collections.Generic
+@using System.Web
+@using HelperMethods.Infrastructure
+
+@{
+    ViewBag.Title = "Summary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="panel">
+
+    <div class="panel-heading">
+        @Html.ActionLink("Return to Book", "Index", "Book", new { NodeID = @Model.Summary.NodeID }, new { @class = "btn btn-default" })
+        @Html.Hidden("NodeID", @Model.Summary.NodeID)
+        <h3>Summary</h3>
+    </div>
+
+    <div class="panel-body">
+        @using (Html.BeginForm("Edit", "Summary", new { }, FormMethod.Post, new { @class = "navbutton" }))
+        {
+            @Html.Partial("BookContent", @Model)
+            for (int i = 0; i < @Model.SentencesNoOf; i++)
+            {
+                <div class="dataElem">
+                    @Html.CheckBoxFor(x => x.SelectedSentences[i], @Model.SelectedSentences[i])
+                    @Model.SentenceInParagraph[i]
+                    @Html.HiddenFor(x => x.SentenceInParagraph[i], @Model.SentenceInParagraph[i])
+                    @Html.EncodeIt(@Model.Sentences[i])
+                    @Html.HiddenFor(x => x.Sentences[i], @Model.Sentences[i])
+                </div>
+            }
+            @Html.HiddenFor(x => x.Summary.NodeID, @Model.Summary.NodeID)
+            @Html.HiddenFor(x => x.Summary.Summary1, @Model.Summary.Summary1)
+            @Html.HiddenFor(x => x.SentencesNoOf, @Model.SentencesNoOf)
+            <br />
+            <input type="submit" value="Insert" class="btn btn-primary" />
+        }
+    </div>
+
+</div>

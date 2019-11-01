@@ -1,0 +1,268 @@
+﻿@model Books.WebUI.Models.BookIndexViewModel
+@using System.Collections.Generic
+@using System.Web
+@using HelperMethods.Infrastructure
+
+<!-- For each paragraph determine if the paragraph is any of the following (each affects how to format the
+paragraph):-
+part of a table (contains "£" indicator),
+part of an ordered list (contains "¤" indicator),
+part of an unordered list (contains "¥" indicator),
+its a formula (contains the"<math " string ),
+its unformatted code (contains "§" indicator, excludes formulas),
+contains HTML (contains "<" and ">" characters, exclude formulas and unformatted code),
+if its a table heading (contains the string "tab"),
+if its a figure heading (contains the string "fig"),
+if its a listing heading (contains the string "listing")
+Also
+Determine if the next picture to be displayed is a Table picture or an actual Figure picture (if this
+paragraph is a figure heading or a (picture) Table heading we will also display the corrosponding picture
+or table along with the heading) -->
+@foreach (string p in Model.Paragraphs)
+{
+    bool itsATable = false;
+    if (@p.Length > 0)
+    {
+        if (@p.Substring(0, 1) == "£") { itsATable = true; }
+    }
+    bool itsAnOrderedList = false;
+    if (@p.Length > 0)
+    {
+        if (@p.Substring(0, 1) == "¤") { itsAnOrderedList = true; }
+    }
+    bool itsAnUnorderedList = false;
+    if (@p.Length > 0)
+    {
+        if (@p.Substring(0, 1) == "¥") { itsAnUnorderedList = true; }
+    }
+    bool itsCode = false;
+    if (@p.Length > 0 && !itsATable && !itsAnOrderedList && !itsAnUnorderedList)
+    {
+        if (@p.Substring(0, 1) == "§") { itsCode = true; }
+    }
+    bool itsGotHtml = false;
+    if (@p.Count<char>(x => x == '<') > 1 && @p.Contains('>') && @p.Contains("</"))
+    {
+        itsGotHtml = true;
+    }
+    bool itsATableHeading = false;
+    bool itsAFigureHeading = false;
+    bool itsAListingHeading = false;
+    bool itsAHeading = false;
+    if (@p.Length > 2)
+    {
+        if (@p.Substring(0, 3).ToLower() == "tab") { itsATableHeading = true; }
+    }
+    if (@p.Length > 2)
+    {
+        if (@p.Substring(0, 3).ToLower() == "fig") { itsAFigureHeading = true; }
+    }
+    if (@p.Length > 4)
+    {
+        if (@p.Substring(0, 5).ToLower() == "error") { itsAFigureHeading = true; }
+    }
+    if (@p.Length > 5)
+    {
+        if (@p.Substring(0, 6).ToLower() == "script") { itsAListingHeading = true; }
+    }
+    if (@p.Length > 6)
+    {
+        if (@p.Substring(0, 7).ToLower() == "listing") { itsAListingHeading = true; }
+    }
+    if (itsAFigureHeading || itsAListingHeading || itsATableHeading)
+    {
+        itsAHeading = true;
+    }
+    bool itsAFigPict = false;
+    bool itsATabPict = false;
+    if (@Model.PicturePointer < @Model.NoOfPictures)
+    {
+        if (@Model.Pictures.ToArray()[@Model.PicturePointer].Title.Length > 2)
+        {
+            if (@Model.Pictures.ToArray()[@Model.PicturePointer].Title.Substring(0, 3).ToLower() == "fig") { itsAFigPict = true; }
+            if (@Model.Pictures.ToArray()[@Model.PicturePointer].Title.Substring(0, 3).ToLower() == "tab") { itsATabPict = true; }
+        }
+        if (@Model.Pictures.ToArray()[@Model.PicturePointer].Title.Length > 4)
+        {
+            if (@Model.Pictures.ToArray()[@Model.PicturePointer].Title.Substring(0, 5).ToLower() == "error") { itsAFigPict = true; }
+            if (@Model.Pictures.ToArray()[@Model.PicturePointer].Title.Substring(0, 5).ToLower() == "cover") { itsAFigPict = true; }
+        }
+        if (@Model.Pictures.ToArray()[@Model.PicturePointer].Title.Length > 5)
+        {
+            if (@Model.Pictures.ToArray()[@Model.PicturePointer].Title.Substring(0, 6).ToLower() == "figure") { itsAFigPict = true; }
+        }
+    }
+    <!-- If the paragraph is
+            part of a table (contains "£" indicator),
+            part of an ordered list (contains "¤" indicator),
+            part of an unordered list (contains "¥" indicator),
+            its unformatted code (contains "§" indicator)
+
+    This is the paragraph formatting logic
+
+                            Html
+
+    ItsCode         				<pre><code>p.Substring(1)</code></pre>
+
+    itsAnUnorderedList	 	Y		Html.ContainsHtml("<li>" + listElement + "</li>")
+                            N		<li>listElement</li>
+
+    itsAnOrderedList	 	Y		Html.ContainsHtml("<li>" + listElement.Substring(listElement.IndexOf(" ")) + "</li>")
+                            N		<li>listElement.Substring(listElement.IndexOf(" "))</li>
+
+    itsATable       		 	 	<th>cell</th>
+                            Y		<td>Html.ContainsHtml(cell)</td>
+                            N		<td>cell</td>
+
+                        Html Head   Format
+
+    Other	         	Y	 Y  	<p style="clear:left"><strong>Html.ContainsHtml(p)</strong></p>
+                                N  	<p>Html.ContainsHtml(p)</p>
+                        N	 Y  	<p style="clear:left"><strong>p</strong></p>
+                                N  	<p>p</p>
+    -->
+    if (itsATable || itsAnOrderedList || itsAnUnorderedList || itsCode)
+    {
+                        <!-- If this paragraph is unformatted code (contains "§" indicator, excludes formulas) skip the indicator -->
+        if (itsCode)
+        {
+            <pre>@p.Substring(1)</pre>
+        }
+                        <!-- Unordered List -->
+        if (itsAnUnorderedList)
+        {
+            string[] listElements = @p.Substring(1).Split('¥');
+            <ul style="clear:left">
+                @foreach (string listElement in listElements)
+                {
+                    if (listElement.Count<char>(x => x == '<') > 1 && listElement.Contains('>') && listElement.Contains("</"))
+                    {
+                        @Html.ContainsHtml("<li>" + @listElement + "</li>")
+                    }
+                    else
+                    {
+                        <li>@listElement</li>
+                    }
+                }
+            </ul>
+        }
+                        <!-- Ordered List -->
+        if (itsAnOrderedList)
+        {
+            string[] listElements = @p.Substring(1).Split('¤');
+            string startAt = "1";
+            if (listElements[0].IndexOf(" ") > 1)
+                startAt = listElements[0].Substring(0, listElements[0].IndexOf(" ") - 1);
+            <ol style="clear:left" start="@startAt">
+                @foreach (string listElement in listElements)
+                {
+                    if (listElement.Count<char>(x => x == '<') > 1 && listElement.Contains(">") && listElement.Contains("</"))
+                    {
+                        @Html.ContainsHtml("<li>" + @listElement.Substring(listElement.IndexOf(" ")) + "</li>")
+                    }
+                    else
+                    {
+                        <li>@listElement.Substring(listElement.IndexOf(" "))</li>
+                    }
+                }
+            </ol>
+        }
+                        <!-- Table -->
+        if (itsATable)
+        {
+            string[] rows = @p.Substring(1).Split('£');
+            int Cols = rows[0].Split((Char)9).Count();
+            <table style="clear:left" class="table table-striped table-condensed table-bordered">
+                @for (int i = 0; i < rows.Count(); i++)
+                {
+                    string[] cells = rows[i].Split((Char)9);
+                    int cellsCount = cells.Count();
+                    if (i == 0)
+                    {
+                        <tr>
+                            @foreach (string cell in cells)
+                            {
+                                <th>@cell</th>
+                            }
+                            @if (cellsCount < Cols)
+                            {
+                                for (int j = cellsCount; j < Cols; j++)
+                                {
+                                    <th></th>
+                                }
+                            }
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            @foreach (string cell in cells)
+                            {
+                                if (@cell.Count<char>(x => x == '<') > 1 && @cell.Contains(">") && @cell.Contains("</"))
+                                {
+                                    <td>@Html.ContainsHtml(@cell)</td>
+                                }
+                                else
+                                {
+                                    <td>@cell</td>
+                                }
+                            }
+                            @if (cellsCount < Cols)
+                            {
+                                for (int j = cellsCount; j < Cols; j++)
+                                {
+                                    <td></td>
+                                }
+                            }
+                        </tr>
+                    }
+                }
+            </table>
+        }
+    };
+                    <!-- Paragraph isnt a Table, OrderedList, UnorderedList or Unformatted Code -->
+    if (!itsATable && !itsAnOrderedList && !itsAnUnorderedList && !itsCode)
+    {
+        if (@Model.HasPicture)
+        {
+            if (((@Model.HasNoFigPara && itsAFigPict) || (@Model.HasNoTabPara && itsATabPict)) && (@Model.PicturePointer < @Model.NoOfPictures) && !@Model.PictureFixed)
+            {
+                @Html.Action("Index", "Picture", new { NodeID = @Model.Node.NodeID, pictureptr = @Model.PicturePointer });
+                                                                                                                                         Model.PicturePointer++;
+            }
+        }
+        if (itsGotHtml && itsAHeading)
+        {
+            <p style="clear:left"><strong>@Html.ContainsHtml(@p)</strong></p>
+        }
+        if (itsGotHtml && !itsAHeading)
+        {
+            <p>@Html.ContainsHtml(@p)</p>
+        }
+        if (!itsGotHtml && itsAHeading)
+        {
+            <p style="clear:left"><strong>@p</strong></p>
+        }
+        if (!itsGotHtml && !itsAHeading)
+        {
+            <p>@p</p>
+        }
+        if (Model.HasPicture)
+        {
+            if (((itsATableHeading && itsATabPict) || itsAFigureHeading && itsAFigPict) && @Model.PicturePointer < @Model.NoOfPictures && !@Model.PictureFixed)
+            {
+                @Html.Action("Index", "Picture", new { NodeID = @Model.Node.NodeID, caption = false, pictureptr = @Model.PicturePointer })
+                Model.PicturePointer++;
+            }
+        }
+    }
+}
+@if (@Model.PicturePointer < @Model.NoOfPictures && !@Model.PictureFixed)
+{
+    do
+    {
+        @Html.Action("Index", "Picture", new { NodeID = @Model.Node.NodeID, caption = false, pictureptr = @Model.PicturePointer })
+        Model.PicturePointer++;
+    }
+    while (@Model.PicturePointer < @Model.NoOfPictures);
+}

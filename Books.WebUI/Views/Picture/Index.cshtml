@@ -1,0 +1,28 @@
+﻿@using Books.Domain.Concrete
+@model Books.WebUI.Models.PictureIndexViewModel
+
+@{
+    Layout = null;
+}
+
+<figure>
+@if (@Model.Caption)
+{
+    <figcaption>@Model.Pictures.ToArray()[@Model.PicturePointer].Title</figcaption>
+}
+@if (@Model.Node.TreeLevel == 1)
+{
+    <img class="imagelevel1" src="@Model.Pictures.ToArray()[@Model.PicturePointer].Picture1" />
+}
+else
+{
+    if (@Model.Thumbnail == true)
+    {
+        <img class="imagethumbnail" src="@Model.Pictures.ToArray()[@Model.PicturePointer].Picture1" />
+    }
+    else
+    {
+        <img class="image" src="@Model.Pictures.ToArray()[@Model.PicturePointer].Picture1" />
+    }
+}
+</figure>

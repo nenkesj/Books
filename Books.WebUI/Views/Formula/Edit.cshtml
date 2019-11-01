@@ -1,0 +1,456 @@
+﻿@model Books.WebUI.Models.FormulaEditViewModel
+@using HelperMethods.Infrastructure
+
+@{
+    ViewBag.Title = "Formula";
+}
+
+<div class="panel">
+    <div class="panel-heading">
+        @using (Html.BeginForm("Edit", "Formula", new { undo = true }, FormMethod.Post, new { @class = "navbutton" }))
+        {
+            @Html.Hidden("insert", @Model.Insert)
+            @Html.Hidden("target", @Model.Target)
+            @Html.Hidden("block", @Model.Block)
+            @Html.Hidden("clearformula", @Model.ClearFormula)
+            @Html.Hidden("bothident", @Model.BothIdent)
+            @Html.Hidden("boldident", @Model.BoldIdent)
+            @Html.Hidden("ident1", @Model.Ident1)
+            @Html.Hidden("ident2", @Model.Ident2)
+            @Html.Hidden("oper1", @Model.Oper1)
+            @Html.Hidden("oper2", @Model.Oper2)
+            @Html.Hidden("bothoper", @Model.BothOper)
+            @Html.Hidden("num1", @Model.Num1)
+            @Html.Hidden("num2", @Model.Num2)
+            @Html.Hidden("bothnum", @Model.BothNum)
+            @Html.Hidden("space", @Model.Num1)
+            @Html.Hidden("text", @Model.Text)
+            @Html.Hidden("boldtext", @Model.BoldText)
+            @Html.Hidden("algebraic", @Model.Algebraic)
+            @Html.Hidden("calculus", @Model.Calculus)
+            @Html.Hidden("ellipses", @Model.Ellipses)
+            @Html.Hidden("logic", @Model.Logic)
+            @Html.Hidden("vector", @Model.Vector)
+            @Html.Hidden("greekupper", @Model.GreekUpper)
+            @Html.Hidden("greeklower", @Model.GreekLower)
+            @Html.Hidden("NodeID", @Model.NodeID)
+            <input type="submit" value="Undo" class="btn btn-primary" />
+        }
+        @Html.ActionLink("Return to Book", "Index", "Book", new { NodeID = @Model.NodeID }, new { @class = "btn btn-default" })
+
+        <h3>Formula</h3> 
+    </div>
+
+    <div class="panel-body">
+        @using (Html.BeginForm("Edit", "Formula", new { undo = false }, FormMethod.Post, new { @class = "navbutton" }))
+        {
+            @Html.Hidden("NodeID", @Model.NodeID)
+            <div class="dataElem">
+                <p>@Html.MathsFormula((string)@Session["formula"])</p>
+            </div>
+            <br/>
+            <div class="dataElem">
+                <label for="Algebraic">Algebraic:</label>
+                <select id="Algebraic" name="Algebraic">
+                    <option value="None" selected>None</option>
+                    <option value="plus;">+</option>
+                    <option value="minus;">-</option>
+                    <option value="times;">×</option>
+                    <option value="divide;">÷</option>
+                    <option value="ne;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&ne;</mo></math></option>
+                    <option value="asymp;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&asymp;</mo></math></option>
+                    <option value="lt;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&lt;</mo></math></option>
+                    <option value="le;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&le;</mo></math></option>
+                    <option value="gt;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&gt;</mo></math></option>
+                    <option value="ge;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&ge;</mo></math></option>
+                    <option value="plusmn;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&plusmn;</mo></math></option>
+                    <option value="prop;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&prop;</mo></math></option>
+                    <option value="sum;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&sum;</mo></math></option>
+                    <option value="prod;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&prod;</mo></math></option>
+                    <option value="lfloor;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&lfloor;</mo></math></option>
+                    <option value="rfloor;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&rfloor;</mo></math></option>
+                    <option value="lceil;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&lceil;</mo></math></option>
+                    <option value="rceil;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&rceil;</mo></math></option>
+                </select>
+                <label for="Calculus">Calculus:</label>
+                <select id="Calculus" name="Calculus">
+                    <option value="None" selected>None</option>
+                    <option value="prime;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&prime;</mo></math></option>
+                    <option value="Prime;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&Prime;</mo></math></option>
+                    <option value="tprime;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&tprime;</mo></math></option>
+                    <option value="qprime;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&qprime;</mo></math></option>
+                    <option value="part;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&part;</mo></math></option>
+                    <option value="Delta;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&Delta;</mo></math></option>
+                    <option value="Del;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&Del;</mo></math></option>
+                    <option value="int;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&int;</mo></math></option>
+                    <option value="Int;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&Int;</mo></math></option>
+                    <option value="tint;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&tint;</mo></math></option>
+                    <option value="qint;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&qint;</mo></math></option>
+                    <option value="conint;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&conint;</mo></math></option>
+                    <option value="cwconint;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&cwconint;</mo></math></option>
+                    <option value="awconint;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&awconint;</mo></math></option>
+                    <option value="Conint;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&Conint; </mo></math></option>
+                    <option value="Cconint;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&Cconint; </mo></math></option>
+                    <option value="infin;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inine'><mo>&infin; </mo></math></option>
+                </select>
+                <label for="Ellipses">Ellipses:</label>
+                <select id="Ellipses" name="Ellipses">
+                    <option value="None" selected>None</option>
+                    <option value="hellip;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&hellip;</mo> </math></option>
+                    <option value="vellip;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&vellip;</mo> </math></option>
+                    <option value="ctdot;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&ctdot;</mo> </math></option>
+                    <option value="utdot;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&utdot;</mo> </math></option>
+                    <option value="dtdot;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&dtdot;</mo> </math></option>
+                </select>
+                <label for="Logic">Logic:</label>
+                <select id="Logic" name="Logic">
+                    <option value="None" selected>None</option>
+                    <option value="not;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&not;</mo> </math></option>
+                    <option value="and;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&and; </mo> </math></option>
+                    <option value="or;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&or;</mo> </math></option>
+                    <option value="veebar;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&veebar;</mo> </math></option>
+                    <option value="forall;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&forall;</mo> </math></option>
+                    <option value="exist;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&exist;</mo> </math></option>
+                    <option value="rArr;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&rArr;</mo> </math></option>
+                    <option value="hArr;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&hArr;</mo> </math></option>
+                    <option value="EmptySmallSquare;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&EmptySmallSquare; </mo> </math></option>
+                    <option value="loz;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&loz;</mo> </math></option>
+                    <option value="vdash;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&vdash;</mo> </math></option>
+                    <option value="vDash;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&vDash;</mo> </math></option>
+                    <option value="there4;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&there4;</mo> </math></option>
+                </select>
+                <label for="Vector">Vector:</label>
+                <select id="Vector" name="Vector">
+                    <option value="None" selected>None</option>
+                    <option value="sdot;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&sdot;</mo> </math></option>
+                    <option value="Cross;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Cross;</mo> </math></option>
+                    <option value="Vert;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Vert;</mo> </math></option>
+                    <option value="lang;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&lang;</mo> </math></option>
+                    <option value="rang;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&rang;</mo> </math></option>
+                    <option value="compfn;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&compfn;</mo> </math></option>
+                    <option value="rarr;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&rarr;</mo> </math></option>
+                    <option value="mapsto;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&mapsto;</mo> </math></option>
+                    <option value="imath;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&imath;</mo> </math></option>
+                    <option value="jmath;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&jmath;</mo> </math></option>
+                </select>
+                <label for="GreekUpper">Greek Upper:</label>
+                <select id="GreekUpper" name="GreekUpper">
+                    <option value="None" selected>None</option>
+                    <option value="Alpha;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Alpha;</mo> </math></option>
+                    <option value="Beta;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Beta;</mo> </math></option>
+                    <option value="Gamma;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Gamma;</mo> </math></option>
+                    <option value="Delta;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Delta;</mo> </math></option>
+                    <option value="Epsilon;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Epsilon;</mo> </math></option>
+                    <option value="Zeta;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Zeta;</mo> </math></option>
+                    <option value="Eta;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Eta;</mo> </math></option>
+                    <option value="Theta;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Theta;</mo> </math></option>
+                    <option value="Iota;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Iota;</mo> </math></option>
+                    <option value="Kappa;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Kappa;</mo> </math></option>
+                    <option value="Lambda;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Lambda;</mo> </math></option>
+                    <option value="Mu;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Mu;</mo> </math></option>
+                    <option value="Nu;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Nu;</mo> </math></option>
+                    <option value="Xi;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Xi;</mo> </math></option>
+                    <option value="Omicron;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Omicron;</mo> </math></option>
+                    <option value="Pi;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Pi;</mo> </math></option>
+                    <option value="Rho;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Rho;</mo> </math></option>
+                    <option value="Sigma;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Sigma;</mo> </math></option>
+                    <option value="Tau;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Tau;</mo> </math></option>
+                    <option value="Upsilon;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Upsilon;</mo> </math></option>
+                    <option value="Phi;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Phi;</mo> </math></option>
+                    <option value="Chi;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Chi;</mo> </math></option>
+                    <option value="Psi;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Psi;</mo> </math></option>
+                    <option value="Omega;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&Omega;</mo> </math></option>
+                </select>
+                <label for="GreekLower">Greek Lower:</label>
+                <select id="GreekLower" name="GreekLower">
+                    <option value="None" selected>None</option>
+                    <option value="alpha;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&alpha;</mo> </math></option>
+                    <option value="beta;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&beta;</mo> </math></option>
+                    <option value="gamma;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&gamma;</mo> </math></option>
+                    <option value="delta;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&delta;</mo> </math></option>
+                    <option value="epsilon;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&epsilon;</mo> </math></option>
+                    <option value="zeta;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&zeta;</mo> </math></option>
+                    <option value="eta;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&eta;</mo> </math></option>
+                    <option value="theta;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&theta;</mo> </math></option>
+                    <option value="iota;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&iota;</mo> </math></option>
+                    <option value="kappa;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&kappa;</mo> </math></option>
+                    <option value="lambda;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&lambda;</mo> </math></option>
+                    <option value="mu;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&mu;</mo> </math></option>
+                    <option value="nu;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&nu;</mo> </math></option>
+                    <option value="xi;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&xi;</mo> </math></option>
+                    <option value="omicron;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&omicron;</mo> </math></option>
+                    <option value="pi;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&pi;</mo> </math></option>
+                    <option value="rho;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&rho;</mo> </math></option>
+                    <option value="sigma;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&sigma;</mo> </math></option>
+                    <option value="tau;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&tau;</mo> </math></option>
+                    <option value="upsilon;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&upsilon;</mo> </math></option>
+                    <option value="phi;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&phi;</mo> </math></option>
+                    <option value="chi;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&chi;</mo> </math></option>
+                    <option value="psi;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&psi;</mo> </math></option>
+                    <option value="omega;"><math xmlns="http://www.w3.org/1998/Math/MathML" display='inline'> <mo>&omega;</mo> </math></option>
+                </select>
+            </div>
+            @Html.Hidden("algebraic", @Model.Algebraic)
+            @Html.Hidden("calculus", @Model.Calculus)
+            @Html.Hidden("ellipses", @Model.Ellipses)
+            @Html.Hidden("logic", @Model.Logic)
+            @Html.Hidden("vector", @Model.Vector)
+            @Html.Hidden("greekupper", @Model.GreekUpper)
+            @Html.Hidden("greeklower", @Model.GreekLower)
+            <br/>
+            <div class="dataElem">
+            <label for="Insert">Insert:</label>
+            <select id="Insert" name="Insert">
+                @if (@Model.Insert == "Identifier")
+                {
+                <option value="Identifier" selected>Identifier</option>
+                }
+                else
+                {
+                <option value="Identifier">Identifier</option>
+                }
+                @if (@Model.Insert == "Operator")
+                {
+                    <option value="Operator" selected>Operator</option>
+                }
+                else
+                {
+                    <option value="Operator">Operator</option>
+                }
+                @if (@Model.Insert == "Number")
+                {
+                    <option value="Number" selected>Number</option>
+                }
+                else
+                {
+                    <option value="Number">Number</option>
+                }
+                <option value="Superscript (Identifier, Number)">Superscript (Identifier, Number)</option>
+                <option value="Superscript (Identifier, Identifier)">Superscript (Identifier, Identifier)</option>
+                <option value="Subscript (Identifier, Number)">Subscript (Identifier, Number)</option>
+                <option value="Subscript (Identifier, Identifier)">Subscript (Identifier, Identifier)</option>
+                <option value="SubSup (Identifier, Number, Number)">SubSup (Identifier, Number, Number)</option>
+                <option value="SubSup (Identifier, Number, Identifier)">SubSup (Identifier, Number, Identifier)</option>
+                <option value="SubSup (Identifier, Identifier, Number)">SubSup (Identifier, Identifier, Number)</option>
+                <option value="Fraction">Fraction</option>
+                <option value="Under Over">Under Over</option>
+                <option value="Over">Over</option>
+                <option value="Space">Space</option>
+                <option value="Text">Text</option>
+                <option value="Square Root">Square Root</option>
+                <option value="Root">Root</option>
+                <option value="Line Break">Line Break</option>
+                <option value="Row">Row</option>
+                <option value="Fenced 1">Fenced 1</option>
+                <option value="Fenced 2">Fenced 2</option>
+                <option value="Fenced 3">Fenced 3</option>
+                <option value="SubSup (Identifier, Row, Row)">SubSup (Identifier, Row, Row)</option>
+                <option value="Superscript (Identifier, Row)">Superscript (Identifier, Row)</option>
+                <option value="Superscript (Row, Identifier)">Superscript (Row, Identifier)</option>
+                <option value="Superscript (Row, Number)">Superscript (Row, Number)</option>
+                <option value="Superscript (Row, Row)">Superscript (Row, Row)</option>
+                <option value="Subscript (Identifier, Row)">Subscript (Identifier, Row)</option>
+                <option value="Subscript (Row, Identifier)">Subscript (Row, Identifier)</option>
+                <option value="Subscript (Row, Number)">Subscript (Row, Number)</option>
+                <option value="Subscript (Row, Row)">Subscript (Row, Row)</option>
+            </select>
+            @Html.Hidden("insert", @Model.Insert)
+            <label for="Target">Target:</label>
+            <select id="Target" name="Target">
+                @if (@Model.Target == "Append")
+                {
+                    <option value="Append" selected>Append</option>
+                }
+                else
+                {
+                    <option value="Append">Append</option>
+                }
+                @if (@Model.Target == "Numerator")
+                {
+                    <option value="Numerator" selected>Numerator</option>
+                }
+                else
+                {
+                    <option value="Numerator">Numerator</option>
+                }
+                @if (@Model.Target == "Denominator")
+                {
+                    <option value="Denominator" selected>Denominator</option>
+                }
+                else
+                {
+                    <option value="Denominator">Denominator</option>
+                }
+                @if (@Model.Target == "Square Root Row")
+                {
+                    <option value="Square Root Row" selected>Square Root Row</option>
+                }
+                else
+                {
+                    <option value="">Square Root Row</option>
+                }
+                @if (@Model.Target == "Root Row")
+                {
+                    <option value="Root Row" selected>Root Row</option>
+                }
+                else
+                {
+                    <option value="Root Row">Root Row</option>
+                }
+                <option value="Clear Numerator">Clear Numerator</option>
+                <option value="Clear Denominator">Clear Denominator</option>
+                <option value="Clear Superscript Row">Clear Superscript Row</option>
+                <option value="Clear Subscript Row">Clear Subscript Row</option>
+                <option value="Clear Under Row">Clear Under Row</option>
+                <option value="Clear Over Row">Clear Over Row</option>
+                <option value="Clear Square Root Row">Clear Square Root Row</option>
+                <option value="Clear Root Row">Clear Root Row</option>
+                @if (@Model.Target == "Under Row")
+                {
+                    <option value="Under Row" selected>Under Row</option>
+                }
+                else
+                {
+                    <option value="Under Row">Under Row</option>
+                }
+                @if (@Model.Target == "Over Row")
+                {
+                    <option value="Over Row" selected>Over Row</option>
+                }
+                else
+                {
+                    <option value="Over Row">Over Row</option>
+                }
+                <option value="Over Row">Over Row</option>
+                @if (@Model.Target == "Row")
+                {
+                    <option value="Row" selected>Row</option>
+                }
+                else
+                {
+                    <option value="Row">Row</option>
+                }
+                @if (@Model.Target == "Subscript Row")
+                {
+                    <option value="Subscript Row" selected>Subscript Row</option>
+                }
+                else
+                {
+                    <option value="Subscript Row">Subscript Row</option>
+                }
+                @if (@Model.Target == "Subscript Row2")
+                {
+                    <option value="Subscript Row2" selected>Subscript Row2</option>
+                }
+                else
+                {
+                    <option value="Subscript Row2">Subscript Row2</option>
+                }
+                @if (@Model.Target == "Superscript Row")
+                {
+                    <option value="Superscript Row" selected>Superscript Row</option>
+                }
+                else
+                {
+                    <option value="Superscript Row">Superscript Row</option>
+                }
+                @if (@Model.Target == "Superscript Row2")
+                {
+                    <option value="Superscript Row2" selected>Superscript Row2</option>
+                }
+                else
+                {
+                    <option value="Superscript Row2">Superscript Row2</option>
+                }
+                @if (@Model.Target == "Row")
+                {
+                    <option value="Row" selected>Row</option>
+                }
+                else
+                {
+                    <option value="Row">Row</option>
+                }
+                <option value="Clear Superscript Row2">Clear Superscript Row2</option>
+                <option value="Clear Subscript Row2">Clear Subscript Row2</option>
+                <option value="Clear Row">Clear Row</option>
+            </select>
+            @Html.Hidden("target", @Model.Target)
+            @Html.DropDownListFor(x => x.Block, new SelectList(
+            new[]
+                {
+                    "Inline",
+                    "Block"
+                }))
+            @Html.Hidden("block", @Model.Block)
+            <label>Clear</label><input id="ClearFormula" name="ClearFormula" type="checkbox" value="true" /><input name="ClearFormula" type="hidden" value="false" />
+            @Html.Hidden("clearformula", @Model.ClearFormula)
+            </div>
+            <br/>
+            <div class="dataElem">
+            <table>
+                <tr>
+                    <td><label>Identifier 1</label></td>
+                    <td>@Html.TextBoxFor(m => m.Ident1)</td>
+                    <td><label>Identifier 2</label></td>
+                    <td>@Html.TextBoxFor(m => m.Ident2)</td>
+                    <td><label>Bold</label></td>
+                    <td><input id="BoldIdent" name="BoldIdent" type="checkbox" value="true" /><input name="BoldIdent" type="hidden" value="false" /></td>
+                    <td><label>Both</label></td>
+                    <td><input id="BothIdent" name="BothIdent" type="checkbox" value="true" /><input name="BothIdent" type="hidden" value="false" /></td>
+               </tr>
+                <tr>
+                    <td><label>Operator 1</label></td>
+                    <td>@Html.TextBoxFor(m => m.Oper1)</td>
+                    <td><label>Operator 2</label></td>
+                    <td>@Html.TextBoxFor(m => m.Oper2)</td>
+                    <td></td>
+                    <td></td>
+                    <td><label>Both</label></td>
+                    <td><input id="BothOper" name="BothOper" type="checkbox" value="true" /><input name="BothOper" type="hidden" value="false" /></td>
+                </tr>
+                <tr>
+                    <td><label>Number 1</label></td>
+                    <td>@Html.TextBoxFor(m => m.Num1)</td>
+                    <td><label>Number 2</label></td>
+                    <td>@Html.TextBoxFor(m => m.Num2)</td>
+                    <td></td>
+                    <td></td>
+                    <td><label>Both</label></td>
+                    <td><input id="BothNum" name="BothNum" type="checkbox" value="true" /><input name="BothNum" type="hidden" value="false" /></td>
+                </tr>
+                <tr>
+                    <td><label>Space</label></td>
+                    <td>@Html.TextBoxFor(m => m.Space)</td>
+                    <td><label>Text</label></td>
+                    <td>@Html.TextBoxFor(m => m.Text)</td>
+                    <td><label>Bold</label></td>
+                    <td><input id="BoldText" name="BoldText" type="checkbox" value="true" /><input name="BoldText" type="hidden" value="false" /></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+            @Html.Hidden("bothident", @Model.BothIdent)
+            @Html.Hidden("boldident", @Model.BoldIdent)
+            @Html.Hidden("ident1", @Model.Ident1)
+            @Html.Hidden("ident2", @Model.Ident2)
+            @Html.Hidden("oper1", @Model.Oper1)
+            @Html.Hidden("oper2", @Model.Oper2)
+            @Html.Hidden("bothoper", @Model.BothOper)
+            @Html.Hidden("num1", @Model.Num1)
+            @Html.Hidden("num2", @Model.Num2)
+            @Html.Hidden("bothnum", @Model.BothNum)
+            @Html.Hidden("space", @Model.Space)
+            @Html.Hidden("text", @Model.Text)
+            @Html.Hidden("boldtext", @Model.BoldText)
+
+            </div>
+            <br/>
+            <input type="submit" value="Insert" class="btn btn-primary" />
+            <br/>
+            <br/>
+            <div class="dataElem">
+                <label>@Session["formula"]</label><br />
+            </div>
+        }
+    </div>
+</div>
